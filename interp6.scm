@@ -19,9 +19,9 @@
       [,x (guard (symbol? x)) (env x)]
       [(lambda (,x) ,body)
        (lambda (a)
-           ((value-of body)
-            (lambda (y)
-              (if ((ceq? x) y) a (env y)))))]
+         ((value-of body)
+          (lambda (y)
+            (if ((ceq? x) y) a (env y)))))]
       [(,rator ,rand)
        (lambda (env)
          (((value-of rator) env) ((value-of rand) env)))])))

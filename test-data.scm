@@ -1,7 +1,7 @@
 
 
 ;; A complicated countdown from 5 to 0 which returns 1. It uses a
-;; Church representation of numbers,pred, and if-zero?
+;; Church representation of numbers, pred, and if-zero?
 
 (define complex-countdown
   '(((((lambda (w) (w w))
