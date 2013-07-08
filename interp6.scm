@@ -14,14 +14,16 @@
 ;; slide in the rest of the lines
 (define value-of
   (lambda (exp)
+;;    (begin (display count) (newline) (set! count (add1 count)))
     (pmatch exp
-      [,n (guard (number? n)) n]
-      [,x (guard (symbol? x)) (env x)]
+      [,n (guard (number? n)) (lambda (env) n)]
+      [,x (guard (symbol? x)) (lambda (env) (env x))]
       [(lambda (,x) ,body)
-       (lambda (a)
-         ((value-of body)
-          (lambda (y)
-            (if ((ceq? x) y) a (env y)))))]
+       (lambda (env)
+         (lambda (a)
+           ((value-of body)
+            (lambda (y)
+              (if ((ceq? x) y) a (env y))))))]
       [(,rator ,rand)
        (lambda (env)
          (((value-of rator) env) ((value-of rand) env)))])))
@@ -55,6 +57,7 @@
      11))
   25)
 
+(set! count 0)
 (test-check "complex countdown"
   (eval-exp complex-countdown)
   1)
