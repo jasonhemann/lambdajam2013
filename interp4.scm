@@ -19,8 +19,13 @@
         [,n (guard (number? n)) n]
         [,x (guard (symbol? x)) (env x)]
         [(lambda (,x) ,body)
-;;       complete the lambda line
-         ]
+         (lambda (env)
+           (lambda (a)
+             ((value-of body)
+              (lambda (y)
+                (if ((ceq? x) y)
+                    a
+                    (env y))))))]
         [(if ,t ,c ,a)
          (if ((value-of t) env)
              ((value-of c) env)
