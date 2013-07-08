@@ -1,9 +1,15 @@
-lambdajam2013
+Lambda Jam 2013
 =============
 
-Code for the interpreters workshop at Lambda Jam 2013
+Code for the interpreters workshop at Lambda Jam 2013.
 
-The following documents were used in preparing the code and presentation for this workshop.
+Before we begin, you should have the following downloaded, installed, and configured:
+
+ * Some version of Scheme (e.g. Petite Chez http://www.scheme.com/download/)
+ * GitHub https://github.com/
+ * A text editor (e.g. Emacs, vim) with automatic parenthesis matching enabled
+
+The following documents were used in preparing the code and presentation for this workshop:
 
  * _Definitional Interpreters for Higher-Order Programming Languages_ by Reynolds
  * _Definitional Interpreters Revisited_ by Reynolds
