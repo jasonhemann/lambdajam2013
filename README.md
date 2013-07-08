@@ -7,7 +7,7 @@ Before we begin, you should have the following downloaded, installed, and config
 
  * Some version of Scheme (e.g. Petite Chez http://www.scheme.com/download/)
  * GitHub https://github.com/
- * A text editor (e.g. Emacs, vim) with automatic parenthesis matching enabled
+ * A text editor (e.g. Emacs, Vim) with automatic parenthesis matching enabled
 
 The following documents were used in preparing the code and presentation for this workshop:
 
