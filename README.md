@@ -9,6 +9,10 @@ Before we begin, you should have the following downloaded, installed, and config
  * GitHub https://github.com/
  * A text editor (e.g. Emacs, Vim) with automatic parenthesis matching enabled
 
+and pull down the code in this repository:
+
+git@github.com:jasonhemann/lambdajam2013.git
+ 
 The following documents were used in preparing the code and presentation for this workshop:
 
  * _Definitional Interpreters for Higher-Order Programming Languages_ by Reynolds
