@@ -19,9 +19,7 @@
         [,x (guard (symbol? x)) (env x)]
         [(call/cenv ,rator)
          (((value-of rator) env) env)]
-        [(eval-in ,exp)
-;;       complete the eval-in line
-         ]
+        [(eval-in ,exp) (value-of exp)]
         [(lambda (,x) ,body)
          (lambda (a)
            ((value-of body)
