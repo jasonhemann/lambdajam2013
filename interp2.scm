@@ -30,8 +30,9 @@
          ((value-of body)
           (letrec
             ((env^
-;;             complete recursive environment
-               ))
+              (lambda (y) (if ((ceq? f) y)
+                         ((value-of rator) env^)
+                         (env y)))))
             env^))]
         [(,rator ,rand)
          (((value-of rator) env) ((value-of rand) env))]))))
