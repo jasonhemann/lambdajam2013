@@ -15,7 +15,7 @@
   (lambda (exp)
     (lambda (env)
       (pmatch exp
-;;      add numbers
+        [,n (guard (number? n)) n]
         [,x (guard (symbol? x)) (env x)]
         [(,rator ,rand)
          (((value-of rator) env) ((value-of rand) env))]))))
