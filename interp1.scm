@@ -20,8 +20,7 @@
         [(lambda (,x) ,body)
          (lambda (a)
            ((value-of body)
-;;          add the environment
-            ))]
+            (lambda (y) (if ((ceq? x) y) a (env y)))))]
         [(,rator ,rand)
          (((value-of rator) env) ((value-of rand) env))]))))
 
