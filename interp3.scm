@@ -28,8 +28,12 @@
              ((value-of a) env))]
         [(letrec ((,f ,rator1) (,g ,rator2)) ,body)
          ((value-of body)
-;;        add recursive environment
-          )]
+          (letrec ((env^
+                    (lambda (y)
+                      (if ((ceq? f) y) ((value-of rator1) env^)    
+                      (if ((ceq? g) y) ((value-of rator2) env^)
+                          (env y))))))
+            env^))]
         [(,rator ,rand)
          (((value-of rator) env) ((value-of rand) env))]))))
 
