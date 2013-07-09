@@ -5,10 +5,10 @@
 
 (define init-senv
   (lambda (y)
-    (if ((ceq? '+) y) 0
+    (if ((ceq? '+) y) 0         
     (if ((ceq? '*) y) 1
     (if ((ceq? 'add1) y) 2
-    (if ((ceq? 'sub1) y) 3
+    (if ((ceq? 'sub1) y) 3    
         error))))))
 
 (define init-denv
@@ -22,7 +22,7 @@
 (define value-of
   (lambda (exp)
     (lambda (senv)
-      (lambda (denv)
+      (lambda (denv) 
         (pmatch exp
           [,n (guard (number? n)) n]
           [,x (guard (symbol? x)) (denv (senv x))]
@@ -33,9 +33,9 @@
                  (if ((ceq? x) y) 0 (add1 (senv y)))))
               (lambda (y)
                 (if ((c= 0) y) a (denv (sub1 y))))))]
-          [(,rator ,rand)
-           ;; transform the right-hand side of the rator/rand line
-           (((value-of rator) env) ((value-of rand) env))])))))
+          [(,rator ,rand)           
+           ((((value-of rator) senv) denv)
+            (((value-of rand) senv) denv))])))))
 
 (define eval-exp
   (lambda (exp)
