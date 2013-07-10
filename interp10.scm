@@ -22,13 +22,12 @@
 (define value-of
   (lambda (exp)
     (lambda (senv)
-;;      (begin (display count) (newline) (set! count (add1 count)))
       (pmatch exp
-        [,n (guard (number? n)) (lambda (denv) n)]
-        [,x (guard (symbol? x))
+        (,n (guard (number? n)) (lambda (denv) n))
+        (,x (guard (symbol? x))
             (let ((sidx (senv x)))
-            (lambda (denv) (denv sidx)))]
-        [(lambda (,x) ,body)
+            (lambda (denv) (denv sidx))))
+        ((lambda (,x) ,body)
          (let ((sbody ((value-of body)
                        (lambda (y)
                          (if ((ceq? x) y) 0 (add1 (senv y)))))))
@@ -37,12 +36,12 @@
                (lambda (a)
                  (sbody
                   (lambda (y)
-                    (if (zero? y) a (denv (sub1 y)))))))))]
-        [(,rator ,rand)
+                    (if (zero? y) a (denv (sub1 y))))))))))
+        ((,rator ,rand)
          (let ((srator ((value-of rator) senv)))
            (let ((srand ((value-of rand) senv)))
              (lambda (denv)
-               ((srator denv) (srand denv)))))]))))
+               ((srator denv) (srand denv))))))))))
 
 (define eval-exp
   (lambda (exp)
@@ -73,8 +72,7 @@
      11))
   25)
 
-(set! count 0)
-(time (test-check "complex countdown"
+(test-check "complex countdown"
   (eval-exp complex-countdown)
-  1))
+  1)
 

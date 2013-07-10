@@ -16,22 +16,22 @@
   (lambda (exp)
     (lambda (env)
       (pmatch exp
-        [,n (guard (number? n)) n]
-        [,x (guard (symbol? x)) (env x)]
-        [(lambda (,x) ,body)
+        (,n (guard (number? n)) n)
+        (,x (guard (symbol? x)) (env x))
+        ((lambda (,x) ,body)
          (lambda (env)
            (lambda (a)
              ((value-of body)
               (lambda (y)
                 (if ((ceq? x) y)
                     a
-                    (env y))))))]
-        [(if ,t ,c ,a)
+                    (env y)))))))
+        ((if ,t ,c ,a)
          (if ((value-of t) env)
              ((value-of c) env)
-             ((value-of a) env))]
-        [(,rator ,rand)
-         ((((value-of rator) env) env) ((value-of rand) env))]))))
+             ((value-of a) env)))
+        ((,rator ,rand)
+         ((((value-of rator) env) env) ((value-of rand) env)))))))
 
 (define eval-exp
   (lambda (exp)
@@ -73,6 +73,9 @@
            1
            ((* n) (! (sub1 n)))))))
   120)
+
+
+
 
 (test-check "without collision"
   (eval-exp

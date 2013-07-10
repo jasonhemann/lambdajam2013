@@ -24,18 +24,18 @@
     (lambda (senv)
       (lambda (denv) 
         (pmatch exp
-          [,n (guard (number? n)) n]
-          [,x (guard (symbol? x)) (denv (senv x))]
-          [(lambda (,x) ,body)
+          (,n (guard (number? n)) n)
+          (,x (guard (symbol? x)) (denv (senv x)))
+          ((lambda (,x) ,body)
            (lambda (a)
              (((value-of body)
                (lambda (y)
                  (if ((ceq? x) y) 0 (add1 (senv y)))))
               (lambda (y)
-                (if ((c= 0) y) a (denv (sub1 y))))))]
-          [(,rator ,rand)           
+                (if ((c= 0) y) a (denv (sub1 y)))))))
+          ((,rator ,rand)           
            ((((value-of rator) senv) denv)
-            (((value-of rand) senv) denv))])))))
+            (((value-of rand) senv) denv))))))))
 
 (define eval-exp
   (lambda (exp)

@@ -15,17 +15,17 @@
   (lambda (exp)
     (lambda (env)
       (pmatch exp
-        [,n (guard (number? n)) n]
-        [,x (guard (symbol? x)) (env x)]
-        [(call/cenv ,rator)
-         (((value-of rator) env) env)]
-        [(eval-in ,exp) (value-of exp)]
-        [(lambda (,x) ,body)
+        (,n (guard (number? n)) n)
+        (,x (guard (symbol? x)) (env x))
+        ((call/cenv ,rator)
+         (((value-of rator) env) env))
+        ((eval-in ,exp) (value-of exp))
+        ((lambda (,x) ,body)
          (lambda (a)
            ((value-of body)
-            (lambda (y) (if ((ceq? x) y) a (env y)))))]
-        [(,rator ,rand)
-         (((value-of rator) env) ((value-of rand) env))]))))
+            (lambda (y) (if ((ceq? x) y) a (env y))))))
+        ((,rator ,rand)
+         (((value-of rator) env) ((value-of rand) env)))))))
 
 (define eval-exp
   (lambda (exp)

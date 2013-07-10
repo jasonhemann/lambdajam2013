@@ -48,27 +48,29 @@
   (lambda (exp)
     (lambda (env)      
       (pmatch exp
-        [,exp (guard (number? exp)) (lambda (k) (k exp))]
-        [,exp (guard (symbol? exp)) (lambda (k) (k (env exp)))]
-        [(lambda (,x) ,body)
+        (,exp (guard (number? exp)) (lambda (k) (k exp)))
+        (,exp (guard (symbol? exp)) (lambda (k) (k (env exp))))
+        ((lambda (,x) ,body)
          (let ((sbody (value-of body)))           
            (let ((sfun (lambda (a)
                          (sbody
                           (lambda (y)
                             (if ((ceq? x) y) a (env y)))))))
-             (lambda (k) (k sfun))))]          
-        [(call/cc ,rator)
+             (lambda (k) (k sfun)))))          
+        ((call/cc ,rator)
          (let ((srator ((value-of rator) env)))           
            (lambda (k)
-             (srator
-              (lambda (p) ((p (call/cc-fun k)) k)))))]
-        [(,rator ,rand)
+             (((value-of rator) env)
+              (lambda (p) ((p (lambda (a)
+                           (lambda (k^)        
+                             (k a)))) k))))))
+        ((,rator ,rand)
          (let ((srator ((value-of rator) env)))
            (let ((srand ((value-of rand) env)))
              (lambda (k)
                (srator (lambda (p)
                          (srand (lambda (a)
-                                  ((p a) k))))))))]))))
+                                  ((p a) k)))))))))))))
 
 (define eval-exp
   (lambda (t)

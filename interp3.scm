@@ -16,26 +16,26 @@
   (lambda (exp)
     (lambda (env)
       (pmatch exp
-        [,n (guard (number? n)) n]
-        [,x (guard (symbol? x)) (env x)]
-        [(lambda (,x) ,body)
+        (,n (guard (number? n)) n)
+        (,x (guard (symbol? x)) (env x))
+        ((lambda (,x) ,body)
          (lambda (a)
            ((value-of body)
-            (lambda (y) (if ((ceq? x) y) a (env y)))))]
-        [(if ,t ,c ,a)
+            (lambda (y) (if ((ceq? x) y) a (env y))))))
+        ((if ,t ,c ,a)
          (if ((value-of t) env)
              ((value-of c) env)
-             ((value-of a) env))]
-        [(letrec ((,f ,rator1) (,g ,rator2)) ,body)
+             ((value-of a) env)))
+        ((letrec ((,f ,rator1) (,g ,rator2)) ,body)
          ((value-of body)
           (letrec ((env^
                     (lambda (y)
                       (if ((ceq? f) y) ((value-of rator1) env^)    
                       (if ((ceq? g) y) ((value-of rator2) env^)
                           (env y))))))
-            env^))]
-        [(,rator ,rand)
-         (((value-of rator) env) ((value-of rand) env))]))))
+            env^)))
+        ((,rator ,rand)
+         (((value-of rator) env) ((value-of rand) env)))))))
 
 (define eval-exp
   (lambda (exp)

@@ -9,12 +9,12 @@
 (define alpha-all
   (lambda (exp)
     (pmatch exp
-      [,x (guard (symbol? x)) x]
-      [(lambda (,x) ,body)
+      (,x (guard (symbol? x)) x)
+      ((lambda (,x) ,body)
        (let ((g (gensym (symbol->string x))))
-         `(lambda (,g) ,(subst g x (alpha-all body))))]
-      [(,rator ,rand)
-       `(,(alpha-all rator) ,(alpha-all rand))])))
+         `(lambda (,g) ,(subst g x (alpha-all body)))))
+      ((,rator ,rand)
+       `(,(alpha-all rator) ,(alpha-all rand))))))
 
 (define reducer
   (lambda (under before)
@@ -22,14 +22,14 @@
       (letrec
         ((reducer (lambda (exp)
                  (pmatch exp
-                   [,x (guard (symbol? x)) x]
-                   [(lambda (,x) ,body)
-                    `(lambda (,x) ,((under reducer) body))]
-                   [(,rator ,rand)
+                   (,x (guard (symbol? x)) x)
+                   ((lambda (,x) ,body)
+                    `(lambda (,x) ,((under reducer) body)))
+                   ((,rator ,rand)
                     (pmatch (reducer rator)
-                      [(lambda (,x) ,body)
-                       (str (subst ((before reducer) rand) x (alpha-all body)))]
-                      [,else `(,else ,((before reducer) rand))])]))))      
+                      ((lambda (,x) ,body)
+                       (str (subst ((before reducer) rand) x (alpha-all body))))
+                      (,else `(,else ,((before reducer) rand)))))))))      
         reducer))))
 
 (define yes (lambda (f) (lambda (x) (f x))))
@@ -90,7 +90,7 @@
                                           (lambda (u) x))
                                          id))))))
                         id))
-                     (lambda (f) f)))))
+                     (lambda (f) (lambda (x) (f x)))))))
                (lambda (f) (lambda (x) (f (f (f (f (f x)))))))))))
     (((eval fn) add1) 0))
   1)
@@ -123,7 +123,7 @@
 ;;                                            (lambda (u) x))
 ;;                                           id))))))
 ;;                          id))
-;;                       (lambda (f) f)))))
+;;                       (lambda (f) (lambda (x) (f x)))))))
 ;;                      (lambda (f) (lambda (x) (f (f (f (f (f x)))))))))))
 ;;     (((eval fn) add1) 0))
 ;;   1)
@@ -156,7 +156,7 @@
                                            (lambda (u) x))
                                           id))))))
                          id))
-                      (lambda (f) f)))))
+                      (lambda (f) (lambda (x) (f x)))))))
                (lambda (f) (lambda (x) (f (f (f (f (f x)))))))))))
     (((eval fn) add1) 0))
   1)
@@ -190,7 +190,7 @@
                                            (lambda (u) x))
                                           id))))))
                          id))
-                      (lambda (f) f)))))
+                      (lambda (f) (lambda (x) (f x)))))))
                (lambda (f) (lambda (x) (f (f (f (f (f x)))))))))))
     (((eval fn) add1) 0))
   1)

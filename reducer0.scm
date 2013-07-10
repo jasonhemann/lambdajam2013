@@ -3,18 +3,17 @@
 (display "A reducer for cbv-reduction to weak normal form")
 (newline)
 
-;; lambda is disallowed as formal parameter. In order to support that,
-;; subst can be defined as follows:
+;; lambda is disallowed as formal parameter. 
 
 (define alpha-all
   (lambda (exp)
     (pmatch exp
-      [,x (guard (symbol? x)) x]
-      [(lambda (,x) ,body)
+      (,x (guard (symbol? x)) x)
+      ((lambda (,x) ,body)
        (let ((g (gensym (symbol->string x))))
-         `(lambda (,g) ,(subst g x (alpha-all body))))]
-      [(,rator ,rand)
-       `(,(alpha-all rator) ,(alpha-all rand))])))
+         `(lambda (,g) ,(subst g x (alpha-all body)))))
+      ((,rator ,rand)
+       `(,(alpha-all rator) ,(alpha-all rand))))))
 
 (define self
   (lambda (under before)
@@ -22,14 +21,14 @@
       (letrec
         ((self (lambda (exp)
                  (pmatch exp
-                   [,x (guard (symbol? x)) x]
-                   [(lambda (,x) ,body)
-                    `(lambda (,x) ,((under self) body))]
-                   [(,rator ,rand)
+                   (,x (guard (symbol? x)) x)
+                   ((lambda (,x) ,body)
+                    `(lambda (,x) ,((under self) body)))
+                   ((,rator ,rand)
                     (pmatch (self rator)
-                      [(lambda (,x) ,body)
-                       (str (subst ((before self) rand) x (alpha-all body)))]
-                      [,else `(,else ,((before self) rand))])]))))      
+                      ((lambda (,x) ,body)
+                       (str (subst ((before self) rand) x (alpha-all body))))
+                      (,else `(,else ,((before self) rand)))))))))      
         self))))
 
 (define yes (lambda (f) (lambda (x) (f x))))
@@ -71,7 +70,7 @@
                                            (lambda (u) x))
                                           id))))))
                          id))
-                      (lambda (f) f)))))
+                      (lambda (f) (lambda (x) (f x)))))))
                 (lambda (f) (lambda (x) (f (f (f (f (f x)))))))))))
     (((eval fn) add1) 0))
   1)

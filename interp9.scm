@@ -22,21 +22,20 @@
 (define value-of
   (lambda (exp)
     (lambda (senv)
-;;      (begin (display count) (newline) (set! count (add1 count)))
       (pmatch exp
-        [,n (guard (number? n)) (lambda (denv) n)]
-        [,x (guard (symbol? x)) (lambda (denv) (denv (senv x)))]
-        [(lambda (,x) ,body)
+        (,n (guard (number? n)) (lambda (denv) n))
+        (,x (guard (symbol? x)) (lambda (denv) (denv (senv x))))
+        ((lambda (,x) ,body)
          (lambda (denv)
            (lambda (a)
              (((value-of body)
                (lambda (y)
                  (if ((ceq? x) y) 0 (add1 (senv y)))))
               (lambda (y)
-                (if ((c= 0) y) a (denv (sub1 y)))))))]
-        [(,rator ,rand)
+                (if ((c= 0) y) a (denv (sub1 y))))))))
+        ((,rator ,rand)
          (lambda (denv)
-           ((((value-of rator) senv) denv) (((value-of rand) senv) denv)))]))))
+           ((((value-of rator) senv) denv) (((value-of rand) senv) denv))))))))
 
 (define eval-exp
   (lambda (exp)
@@ -46,29 +45,28 @@
 
 (load "test-data.scm")
 
-;; (test-check "fifteen is 15"
-;;   (eval-exp '15)
-;;   15)
+(test-check "fifteen is 15"
+  (eval-exp '15)
+  15)
 
-;; (test-check "basic interp"
-;;   (eval-exp '((* 5) ((+ 5) 6)))
-;;   55)
+(test-check "basic interp"
+  (eval-exp '((* 5) ((+ 5) 6)))
+  55)
 
-;; (test-check "application"
-;;   (eval-exp '((lambda (x) x) 5))
-;;   5)
+(test-check "application"
+  (eval-exp '((lambda (x) x) 5))
+  5)
 
-;; (test-check "basic lambda-calc test"
-;;   (eval-exp
-;;    '(((lambda (y)
-;;         (lambda (x)
-;;           ((+ x) (sub1 y))))
-;;       15)
-;;      11))
-;;   25)
+(test-check "basic lambda-calc test"
+  (eval-exp
+   '(((lambda (y)
+        (lambda (x)
+          ((+ x) (sub1 y))))
+      15)
+     11))
+  25)
 
-(set! count 0)
-(time (test-check "complex countdown"
+(test-check "complex countdown"
   (eval-exp complex-countdown)
-  1))
+  1)
 

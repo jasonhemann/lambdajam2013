@@ -17,5 +17,5 @@
                                  (lambda (u) x))
                                 id))))))
                id))
-            (lambda (f) f)))))
+            (lambda (f) (lambda (x) (f x)))))))
       (lambda (f) (lambda (x) (f (f (f (f (f x)))))))) add1) 0))
