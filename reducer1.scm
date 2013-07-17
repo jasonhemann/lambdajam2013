@@ -4,7 +4,9 @@
 (newline)
 
 ;; lambda is disallowed as formal parameter. In order to support that,
-;; subst can be defined as follows:
+
+;; We use gensym to guarantee uniqueness of variable names within exp.
+;; Tested under Chez and Petite Chez Scheme. 
 
 (define alpha-all
   (lambda (exp)

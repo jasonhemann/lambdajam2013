@@ -5,6 +5,9 @@
 
 ;; lambda is disallowed as formal parameter. 
 
+;; We use gensym to guarantee uniqueness of variable names within exp.
+;; Tested under Chez and Petite Chez Scheme. 
+
 (define alpha-all
   (lambda (exp)
     (pmatch exp

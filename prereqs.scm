@@ -56,6 +56,9 @@
 ; It is efficient (generates code at macro-expansion time) and simple:
 ; it should work on any R5RS (and R6RS) Scheme system.
 
+;; Originally due to Oleg Kiselyov
+;; Modified by Dan Friedman and Adam Foltzer, among others.
+
 ; (pmatch exp (quote name) <clause> ...[<else-clause>]) | ADDED (spring, 2013)
 ; (pmatch exp <clause> ...[<else-clause>]) |
 ; (pmatch exp name <clause> ...[<else-clause>]))          ADDED (summer, 2012)
