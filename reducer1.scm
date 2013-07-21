@@ -23,15 +23,15 @@
     (lambda (str)      
       (letrec
         ((reducer (lambda (exp)
-                 (pmatch exp
-                   (,x (guard (symbol? x)) x)
-                   ((lambda (,x) ,body)
-                    `(lambda (,x) ,((under reducer) body)))
-                   ((,rator ,rand)
-                    (pmatch (reducer rator)
+                    (pmatch exp
+                      (,x (guard (symbol? x)) x)
                       ((lambda (,x) ,body)
-                       (str (subst ((before reducer) rand) x (alpha-all body))))
-                      (,else `(,else ,((before reducer) rand)))))))))      
+                       `(lambda (,x) ,((under reducer) body)))
+                      ((,rator ,rand)
+                       (pmatch (reducer rator)
+                         ((lambda (,x) ,body)
+                          (str (subst ((before reducer) rand) x (alpha-all body))))
+                         (,else `(,else ,((before reducer) rand)))))))))      
         reducer))))
 
 (define yes (lambda (f) (lambda (x) (f x))))

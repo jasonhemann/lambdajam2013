@@ -3,10 +3,10 @@
 (display "A reducer for cbv-reduction to weak normal form")
 (newline)
 
-;; lambda is disallowed as formal parameter. 
+;; lambda is disallowed as formal parameter.
 
 ;; We use gensym to guarantee uniqueness of variable names within exp.
-;; Tested under Chez and Petite Chez Scheme. 
+;; Tested under Chez and Petite Chez Scheme.
 
 (define alpha-all
   (lambda (exp)
@@ -18,26 +18,26 @@
       ((,rator ,rand)
        `(,(alpha-all rator) ,(alpha-all rand))))))
 
-(define self
+(define reducer
   (lambda (under before)
-    (lambda (str)      
+    (lambda (str)
       (letrec
-        ((self (lambda (exp)
-                 (pmatch exp
-                   (,x (guard (symbol? x)) x)
-                   ((lambda (,x) ,body)
-                    `(lambda (,x) ,((under self) body)))
-                   ((,rator ,rand)
-                    (pmatch (self rator)
+        ((reducer (lambda (exp)
+                    (pmatch exp
+                      (,x (guard (symbol? x)) x)
                       ((lambda (,x) ,body)
-                       (str (subst ((before self) rand) x (alpha-all body))))
-                      (,else `(,else ,((before self) rand)))))))))      
-        self))))
+                       `(lambda (,x) ,((under reducer) body)))
+                      ((,rator ,rand)
+                       (pmatch (reducer rator)
+                         ((lambda (,x) ,body)
+                          (str (subst ((before reducer) rand) x (alpha-all body))))
+                         (,else `(,else ,((before reducer) rand)))))))))
+        reducer))))
 
 (define yes (lambda (f) (lambda (x) (f x))))
 (define no (lambda (f) (lambda (x) x)))
 
-(define by-value (self no yes))
+(define by-value (reducer no yes))
 
 (define bv-wnf
   (letrec ((str (lambda (exp) ((by-value str) exp))))
@@ -47,7 +47,7 @@
 
 (test-check "test 1"
   (let ((fn (bv-wnf '((lambda (x) (lambda (x) x)) z))))
-    ((eval fn) 5))  
+    ((eval fn) 5))
   5)
 
 (test-check "test 5"
